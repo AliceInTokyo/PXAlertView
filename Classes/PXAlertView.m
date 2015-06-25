@@ -410,6 +410,23 @@ static const CGFloat AlertViewVerticalEdgeMinMargin = 25;
 
 - (void)dismiss:(id)sender animated:(BOOL)animated
 {
+    if (self.disableOtherDissmis && sender != self.cancelButton && sender != self.tap) {
+        
+        if (self.completion) {
+            
+            NSInteger otherIndex = -1;
+            if (self.buttons) {
+                NSUInteger index = [self.buttons indexOfObject:sender];
+                if (otherIndex != NSNotFound) {
+                    otherIndex = index;
+                }
+            }
+            self.completion(NO, otherIndex);
+        }
+        
+        return;
+    }
+    
 	self.visible = NO;
 	
 	[UIView animateWithDuration:(animated ? 0.2 : 0) animations:^{
